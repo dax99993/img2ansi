@@ -39,7 +39,10 @@ class Block(Converter):
         """
 
         self.blockRepr = []
-        self.blockChar = "\u25a0"
+        # Upper half block
+        self.blockChar = "\u2580"
+        # Lower half block
+        #self.blockChar = "\u2584"
 
     def print(self):
         """

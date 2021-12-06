@@ -113,6 +113,19 @@ class Commands():
                 elif(self.ascii):
                     self.img = self.img.resize(
                         (w, int(w * AspectRatio)), Image.LANCZOS)
+            elif(self.resizewidth != 0 and self.resizeheight != 0):
+                if(self.braile):
+                    self.img = self.img.resize(
+                        (2 * self.resizewidth, 4 * self.resizeheight),
+                        Image.LANCZOS)
+                elif(self.block):
+                    self.img = self.img.resize(
+                        (1 * self.resizewidth, 2 * self.resizeheight),
+                        Image.LANCZOS)
+                elif(self.ascii):
+                    self.img = self.img.resize(
+                        (self.resizewidth, self.resizeheight),
+                        Image.LANCZOS)
         else:
             # Resize to given size
             if(self.resizewidth != 0 and self.resizeheight != 0):
@@ -137,7 +150,7 @@ class Commands():
                          4 * self.resizeheight), Image.LANCZOS)
                 elif(self.block):
                     self.img = self.img.resize(
-                        (int(1 * self.resizeheight * AspectRatio),
+                        (int(2 * self.resizeheight * AspectRatio),
                          2 * self.resizeheight), Image.LANCZOS)
                 elif(self.ascii):
                     self.img = self.img.resize(
@@ -151,7 +164,7 @@ class Commands():
                         int(4 * self.resizewidth * AspectRatio)),
                         Image.LANCZOS)
                 elif(self.block):
-                    self.img = self.img.resize((1 * self.resizewidth,
+                    self.img = self.img.resize((2 * self.resizewidth,
                         int(2 * self.resizewidth * AspectRatio)),
                         Image.LANCZOS)
                 elif(self.ascii):
