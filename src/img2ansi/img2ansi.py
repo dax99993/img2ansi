@@ -100,8 +100,8 @@ def createParser():
 
     return parser.parse_args()
 
-
-if __name__ == '__main__':
+def main():
+    #if __name__ == '__main__':
     # Create parser
     args = createParser()
     # Create command instance and process commands

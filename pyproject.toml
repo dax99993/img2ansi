@@ -6,8 +6,8 @@ authors = ["Daniel Bañuelos"]
 license = "MIT"
 readme = "README.md"
 
-#[tool.poetry.scripts]
-#img2ansi = "img2ansi.img2ansi:execute"
+[tool.poetry.scripts]
+img2ansi = "img2ansi.img2ansi:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
