@@ -12,10 +12,10 @@ satisfy an internal interface for img convertion
 """
 from PIL import Image
 from os import get_terminal_size
-from img2ansi.convert.ansi import Ansi
-from img2ansi.convert.ascii import Ascii
-from img2ansi.convert.braile import Braile
-from img2ansi.convert.block import Block
+from img2ansi.convert.ansi.ansi import Ansi
+from img2ansi.convert.ascii.ascii import Ascii
+from img2ansi.convert.braile.braile import Braile
+from img2ansi.convert.block.block import Block
 
 
 class Commands():
@@ -82,7 +82,10 @@ class Commands():
                 if(self.braile):
                     self.img = self.img.resize((2 * w, 4 * h),
                                                Image.LANCZOS)
-                else:
+                elif(self.block):
+                    self.img = self.img.resize((w, 2 * h),
+                                               Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize((w, h), Image.LANCZOS)
             # Resize keeping aspect ratio, height -> terminal height
             elif(self.resizewidth == 0 and self.resizeheight != 0):
@@ -91,7 +94,10 @@ class Commands():
                 if(self.braile):
                     self.img = self.img.resize(
                         (int(2 * h * AspectRatio), 4 * h), Image.LANCZOS)
-                else:
+                elif(self.block):
+                    self.img = self.img.resize(
+                        (int(1 * h * AspectRatio), 2 * h), Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize(
                         (int(h * AspectRatio), h), Image.LANCZOS)
             # Resize keeping aspect ratio, width -> terminal width
@@ -101,7 +107,10 @@ class Commands():
                 if(self.braile):
                     self.img = self.img.resize(
                         (2 * w, int(4 * w * AspectRatio)), Image.LANCZOS)
-                else:
+                elif(self.block):
+                    self.img = self.img.resize(
+                        (1 * w, int(2 * w * AspectRatio)), Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize(
                         (w, int(w * AspectRatio)), Image.LANCZOS)
         else:
@@ -111,7 +120,11 @@ class Commands():
                     self.img = self.img.resize(
                         (2 * self.resizewidth, 4 * self.resizeheight),
                         Image.LANCZOS)
-                else:
+                elif(self.block):
+                    self.img = self.img.resize(
+                        (1 * self.resizewidth, 2 * self.resizeheight),
+                        Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize(
                         (self.resizewidth, self.resizeheight),
                         Image.LANCZOS)
@@ -122,7 +135,11 @@ class Commands():
                     self.img = self.img.resize(
                         (int(2 * self.resizeheight * AspectRatio),
                          4 * self.resizeheight), Image.LANCZOS)
-                else:
+                elif(self.block):
+                    self.img = self.img.resize(
+                        (int(1 * self.resizeheight * AspectRatio),
+                         2 * self.resizeheight), Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize(
                         (int(self.resizeheight * AspectRatio),
                          self.resizeheight), Image.LANCZOS)
@@ -131,9 +148,13 @@ class Commands():
                 AspectRatio = self.img.height / self.img.width
                 if(self.braile):
                     self.img = self.img.resize((2 * self.resizewidth,
-                                                int(4 * self.resizewidth * AspectRatio)),
-                                               Image.LANCZOS)
-                else:
+                        int(4 * self.resizewidth * AspectRatio)),
+                        Image.LANCZOS)
+                elif(self.block):
+                    self.img = self.img.resize((1 * self.resizewidth,
+                        int(2 * self.resizewidth * AspectRatio)),
+                        Image.LANCZOS)
+                elif(self.ascii):
                     self.img = self.img.resize((self.resizewidth, int(
                         self.resizewidth * AspectRatio)), Image.LANCZOS)
 
@@ -149,15 +170,15 @@ class Commands():
         if(self.braile):
             # Create instance of Braile converter
             self.converter = Braile()
-            if(self.colorRGB):
+            if(self.colorRGB != []):
                 self.converter.convert(
                     self.img, self.ansimode, self.invertPattern,
                     self.threshold[0], self.colorRGB)
             else:
-                self.imgConverter.convert(
+                self.converter.convert(
                     self.img, self.ansimode, self.invertPattern,
                     self.threshold[0])
-        elif(self.blocks):
+        elif(self.block):
             # Create instance of Block converter
             self.converter = Block()
             self.converter.convert(self.img, self.ansimode)
@@ -168,11 +189,11 @@ class Commands():
                 self.img, self.ansimode, self.invertPattern)
 
         if (self.noecho):
-            self.imgConverter.print()
+            self.converter.print()
         if (self.save):
-            self.imgConverter.save(self.save)
+            self.converter.save(self.save)
         else:
-            self.imgConverter.save()
+            self.converter.save()
 
     def __init__(self, args):
         """
@@ -186,7 +207,7 @@ class Commands():
         # Get convertion mode
         self.ascii = args.ascii
         self.braile = args.braile
-        self.blocks = args.blocks
+        self.block = args.block
         # Get Extra parameters
         self.colorRGB = args.color
         self.asciicharset = args.asciicharset
@@ -198,15 +219,15 @@ class Commands():
         # Setup ansimode
         self.ansimode = Ansi.NONE
         # Unset None if any ansi sequence is used
-        if(args.bold or args.blink or args.bkgd or args.frgd or (self.colorRGB != [])):
-            self.ansimode & ~ Ansi.NONE
+        if(args.bold or args.blink or args.foreground or (self.colorRGB != [])):
+            self.ansimode &= ~Ansi.NONE
             if (args.bold):
                 self.ansimode |= Ansi.BOLD
             if (args.blink):
                 self.ansimode |= Ansi.BLINK
-            if (args.bkgd):
-                self.ansimode |= Ansi.BKGD
-            if (args.frgd or (self.colorRGB != [])):
+            #if (args.bkgd):
+            #    self.ansimode |= Ansi.BKGD
+            if (args.foreground or (self.colorRGB != [])):
                 self.ansimode |= Ansi.FRGD
         # Get resize parameters
         self.fullscreen = args.fullscreen

@@ -38,7 +38,7 @@ def createParser():
                         default=False)
 
     parser.add_argument('-B', '--block',
-                        action='store_true', help='Background flag',
+                        action='store_true', help='Block Representation flag',
                         default=False)
 
     parser.add_argument('-c', '--color', metavar=("R", "G", "B"),

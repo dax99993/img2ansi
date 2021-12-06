@@ -5,8 +5,8 @@ a windowing technique is used, as a consequence the result has the
 width reduced in half and height being a quarter of the original.
 """
 
-from img2ansi.convert import Converter
-from img2ansi.convert.ansi import *
+from img2ansi.convert.converter import Converter
+from img2ansi.convert.ansi.ansi import *
 from img2ansi.convert.braile.characters import BRAILE
 from img2ansi.convert.braile.utilFunctions import *
 
@@ -67,14 +67,14 @@ class Braile(Converter):
         # Get img dimensions
         width = Limg.width
         height = Limg.height
-        # Add optional ansimode BKGDCOLOR is not available
-        # FRGD applies same color to all characters
-        self.braileRepr.append(get_ansi_seq(
-            ansimode & ~ Ansi.BKGD, frgdcolor))
         # Ignores last column if width is odd
         # Ignores at most last 3 rows if height is not multiple of 4
         # Iterate through all image one window at a time
         for winy in range(0, height - (height % 4), 4):
+            # Add optional ansimode BKGDCOLOR is not available
+            # FRGD applies same color to all characters
+            self.braileRepr.append(get_ansi_seq(
+                ansimode & (~Ansi.BKGD), frgdcolor))
             for winx in range(0, width - (width % 2), 2):
                 # Get window pixels
                 win = windowing(Limg, winx, winy)
@@ -84,13 +84,11 @@ class Braile(Converter):
                 self.braileRepr.append(
                     self.get_braile_char(filteredwin, invertPattern))
             # Add a newline at the end of row
-            if (Ansi.isNone(ansimode)):
+            if (ansimode & Ansi.NONE):
                 self.braileRepr.append("\n")
             else:
                 self.braileRepr.append(get_ansi_seq(Ansi.RESET))
                 self.braileRepr.append("\n")
-                self.braileRepr.append(get_ansi_seq(
-                    ansimode & ~ Ansi.BKGDCOLOR, frgdcolor))
 
     def get_braile_char(self, pdata, invertPattern=False):
         '''

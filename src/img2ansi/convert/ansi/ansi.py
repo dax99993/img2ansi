@@ -50,9 +50,9 @@ def get_ansi_seq(ANSIMODE, rgb=(0xff, 0xff, 0xff)):
             ansiSeq += "\033[1m"
         if(Ansi.BLINK & ANSIMODE):
             ansiSeq += "\033[5m"
-        if(Ansi.FRGDCOLOR & ANSIMODE):
+        if(Ansi.FRGD & ANSIMODE):
             ansiSeq += "\033[38;2;{};{};{}m".format(rgb[0], rgb[1], rgb[2])
-        if(Ansi.BKGDCOLOR & ANSIMODE):
+        if(Ansi.BKGD & ANSIMODE):
             ansiSeq += "\033[48;2;{};{};{}m".format(rgb[0], rgb[1], rgb[2])
 
     return ansiSeq

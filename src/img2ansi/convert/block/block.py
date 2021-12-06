@@ -5,8 +5,8 @@ preview an approximation of the image on the terminal
 
 """
 
-from img2ansi.convert import Converter
-from img2ansi.convert.ansi import *
+from img2ansi.convert.converter import Converter
+from img2ansi.convert.ansi.ansi import *
 
 class Block(Converter):
     """
@@ -66,32 +66,29 @@ class Block(Converter):
         # Get img dimensions
         width = img.width
         height = img.height
-        # Add optional ansi
-        # This convertion mode doesn't support custom
-        # background or foreground color since are used
-        # to color the blocks themselves
-        self.blockRepr.append( get_ansi_seq(ansimode & ~
-                                            Ansi.BKGD & ~
-                                            Ansi.FRGD))
         # Iterate through image in 1x2 window
         # Ignore at most 1 row
         for y in range(0, height - (height % 2), 2):
+            # Add optional ansi
+            # This convertion mode doesn't support custom
+            # background or foreground color since are already used
+            # to color the blocks themselves
+            self.blockRepr.append( get_ansi_seq(ansimode & ~
+                                            Ansi.BKGD & ~
+                                            Ansi.FRGD))
             for x in range(0, width):
                 # Get RGB pixel values
                 RGBupper = rgbimg.getpixel((x, y))
                 RGBlower = rgbimg.getpixel((x, y + 1))
-                # Set background to simulate block
-                self.blockRepr.append(
-                    get_ansi_seq( Ansi.BKGD, RGBlower )
-                )
                 # Set foreground to actual block char (upper block)
                 self.blockRepr.append(
                     get_ansi_seq( Ansi.FRGD, RGBupper )
                 )
+                # Set background to simulate block
+                self.blockRepr.append(
+                    get_ansi_seq( Ansi.BKGD, RGBlower )
+                )
                 self.blockRepr.append(self.blockChar)
             # Add newline char at each row end
-            self.blockRepr.append(get_ansi_seq(Ansi.Reset))
+            self.blockRepr.append(get_ansi_seq(Ansi.RESET))
             self.blockRepr.append("\n")
-            self.blockRepr.append(get_ansi_seq(ansimode & ~
-                                               Ansi.BKGD & ~
-                                               Ansi.FRGD))

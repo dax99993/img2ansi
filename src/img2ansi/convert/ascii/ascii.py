@@ -4,8 +4,8 @@ This script implements a class to perform image to ascii convertion
 
 """
 
-from img2ansi.convert import Converter
-from img2ansi.convert.ansi import *
+from img2ansi.convert.converter import Converter
+from img2ansi.convert.ansi.ansi import *
 
 
 class Ascii(Converter):
@@ -71,11 +71,11 @@ class Ascii(Converter):
         # Get img dimensions
         width = img.width
         height = img.height
-        # Add optional ansimode (blink, bold, etc)
-        self.asciiRepr.append(get_ansi_seq(
-            ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
         # Iterate through all pixels
         for y in range(height):
+            # Add optional ansimode (blink, bold, etc)
+            self.asciiRepr.append(get_ansi_seq(
+                ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
             for x in range(width):
                 # Get Luma pixel
                 Lpixel = Limg.getpixel((x, y))
@@ -95,13 +95,9 @@ class Ascii(Converter):
                 # Add the character
                 self.asciiRepr.append( self.asciiCode[index] )
             # Add newline at the end of row
-            if(ansimode & Ansi.NONE)):
+            if(ansimode & Ansi.NONE):
                 self.asciiRepr.append("\n")
             else:
                 # Reset Ansi for next row
                 self.asciiRepr.append(get_ansi_seq(Ansi.RESET))
                 self.asciiRepr.append("\n")
-                # Add Ansi attributes to next row
-                if(y != height - 1):
-                self.asciiRepr.append(get_ansi_seq(
-                    ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
