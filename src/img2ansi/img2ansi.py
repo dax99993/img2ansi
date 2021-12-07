@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import sys
 from img2ansi.commands import Commands
 
 
-def createParser():
+def createParser(args):
     """Creates an argument parser for the imgtoansi CLI
 
     By default uses parameters -t 127
@@ -98,11 +99,19 @@ def createParser():
                         help='image to be converted'
                         )
 
-    return parser.parse_args()
+    return parser.parse_args(args)
 
-def main():
+def main(argv=None):
     #if __name__ == '__main__':
     # Create parser
-    args = createParser()
+    if( argv is None ):
+        args = createParser(sys.argv[1:])
+    else:
+        args = createParser(argv)
     # Create command instance and process commands
     commands = Commands(args)
+    # Call convert method
+    result = commands.convert()
+    # return result of convertion
+    return result
+

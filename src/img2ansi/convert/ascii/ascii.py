@@ -101,3 +101,5 @@ class Ascii(Converter):
                 # Reset Ansi for next row
                 self.asciiRepr.append(get_ansi_seq(Ansi.RESET))
                 self.asciiRepr.append("\n")
+
+        return self.asciiRepr

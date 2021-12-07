@@ -95,3 +95,5 @@ class Block(Converter):
             # Add newline char at each row end
             self.blockRepr.append(get_ansi_seq(Ansi.RESET))
             self.blockRepr.append("\n")
+
+        return self.blockRepr

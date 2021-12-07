@@ -90,6 +90,8 @@ class Braile(Converter):
                 self.braileRepr.append(get_ansi_seq(Ansi.RESET))
                 self.braileRepr.append("\n")
 
+        return self.braileRepr
+
     def get_braile_char(self, pdata, invertPattern=False):
         '''
         Analyzes a list of pixel data which is either 0 or 1

@@ -184,21 +184,21 @@ class Commands():
             # Create instance of Braile converter
             self.converter = Braile()
             if(self.colorRGB != []):
-                self.converter.convert(
+                result = self.converter.convert(
                     self.img, self.ansimode, self.invertPattern,
                     self.threshold[0], self.colorRGB)
             else:
-                self.converter.convert(
+                result = self.converter.convert(
                     self.img, self.ansimode, self.invertPattern,
                     self.threshold[0])
         elif(self.block):
             # Create instance of Block converter
             self.converter = Block()
-            self.converter.convert(self.img, self.ansimode)
+            result = self.converter.convert(self.img, self.ansimode)
         elif(self.ascii):
             # Create an instance of Ascii converter
             self.converter = Ascii(self.asciicharset)
-            self.converter.convert(
+            result = self.converter.convert(
                 self.img, self.ansimode, self.invertPattern)
 
         if (self.noecho):
@@ -207,6 +207,9 @@ class Commands():
             self.converter.save(self.save)
         else:
             self.converter.save()
+
+        return result
+
 
     def __init__(self, args):
         """
@@ -247,5 +250,3 @@ class Commands():
         self.resizewidth, self.resizeheight = args.resize
         # Resize img
         self.resizeImg()
-        # Create instance of img converters and perform convertion
-        self.convert()
