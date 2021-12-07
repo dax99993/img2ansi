@@ -17,7 +17,7 @@ def create_parser(args):
     # Setup parser
     parser = argparse.ArgumentParser(
         description="Convert img to Braile representation",
-        epilog="""By default -r 0 0 """,
+        epilog="""By default -r 0 0 -t 127""",
     )
 
     parser.add_argument('-b', '--bold',
@@ -25,12 +25,12 @@ def create_parser(args):
                         default=False)
 
     parser.add_argument('-F', '--frgdcolor', metavar=("R", "G", "B"),
-                        nargs=3, type=int,
+                        nargs=3, type=lambda x: int(x,0),
                         help="""All characters with RGB24 foreground color""",
                         default=[])
 
     parser.add_argument('-B', '--bkgdcolor', metavar=("R", "G", "B"),
-                        nargs=3, type=int,
+                        nargs=3, type=lambda x: int(x,0),
                         help="""All characters with RGB24 background color""",
                         default=[])
 
@@ -61,9 +61,8 @@ def create_parser(args):
 
     parser.add_argument('-o', '--save', metavar="output filename",
                         nargs='?', type=str,
-                        help="""save file (if no output filename)
-                        defaults to braile.txt""",
-                        default="braile.txt")
+                        help="""save file""",
+                        default="")
 
     parser.add_argument('-t', '--threshold', metavar=("Threshold"),
                         nargs=1, type=int,
@@ -78,7 +77,21 @@ def create_parser(args):
     return parser.parse_args(args)
 
 def main(argv=None):
-    #if __name__ == '__main__':
+    """
+    Handles all the program parameters and
+    calls to perform the convertion
+
+    Parameter
+    ---------
+    argv : list
+        A list of parameters
+
+    Returns
+    -------
+    str
+        The result of convertion
+    """
+
     # Create parser
     if( argv is None ):
         args = create_parser(sys.argv[1:])
@@ -88,6 +101,6 @@ def main(argv=None):
     commands = BraileCmd(args)
     # Call convert method
     result = commands.convert()
-    # return result of convertion
-    return result
+    # should i return result of convertion ?
+    # return result
 

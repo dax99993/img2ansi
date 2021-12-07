@@ -27,12 +27,12 @@ def create_parser(args):
                         default=" .~*:+zM#&@$")
 
     parser.add_argument('-F', '--frgdcolor', metavar=("R", "G", "B"),
-                        nargs=3, type=int,
+                        nargs=3, type=lambda x: int(x,0),
                         help="""All characters with RGB24 foreground color""",
                         default=[])
 
     parser.add_argument('-B', '--bkgdcolor', metavar=("R", "G", "B"),
-                        nargs=3, type=int,
+                        nargs=3, type=lambda x: int(x,0),
                         help="""All characters with RGB24 background color""",
                         default=[])
 
@@ -70,9 +70,8 @@ def create_parser(args):
 
     parser.add_argument('-o', '--save', metavar="output filename",
                         nargs='?', type=str,
-                        help="""save file (if no output filename)
-                        defaults to ascii.txt""",
-                        default="ascii.txt")
+                        help="""save file""",
+                        default="")
 
     parser.add_argument('inputImage', type=str,
                         help='image to be converted'
@@ -81,6 +80,21 @@ def create_parser(args):
     return parser.parse_args(args)
 
 def main(argv=None):
+    """
+    Handles all the program parameters and
+    calls to perform the convertion
+
+    Parameter
+    ---------
+    argv : list
+        A list of parameters
+
+    Returns
+    -------
+    str
+        The result of convertion
+    """
+
     # Create parser
     if( argv is None ):
         args = create_parser(sys.argv[1:])
@@ -90,6 +104,6 @@ def main(argv=None):
     commands = AsciiCmd(args)
     # Call convert method
     result = commands.convert()
-    # return result of convertion
-    return result
+    # should i return result of convertion ?
+    #return result
 

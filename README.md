@@ -1,13 +1,13 @@
 <div align="center">
   <h3>
-imgtoANSI is a simple CLI to convert an image to an ASCI or BRAILE/DOT representation with support for <a href ="https://en.wikipedia.org/wiki/ANSI_escape_code" > ANSI escape code sequence </a>
+img2ansi is a simple package containing three CLI to convert an image to an ASCII or BRAILE/DOT or BLOCK representation with support for <a href ="https://en.wikipedia.org/wiki/ANSI_escape_code" > ANSI escape code sequence </a>
   </h3>
 </div>
 
 <div align="center">
   <a href="https://github.com/dax99993/imgtoANSI/blob/main/demo/demo.md">Demo</a>
   <br/><br/>
-  <a href="https://github.com/dax99993/imgtoANSI/blob/main/LICENSE">
+  <a href="https://github.com/dax99993/img2ansi/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="MIT" />
   </a>
   <a href="https://pypi.org/project/PIL/">
@@ -46,15 +46,16 @@ $ pip install img2ansi
 - [ ] Simple animation
 
 ## Usage
-imgtoAnsi asumes default flags such that
-the next uses are equal
+img2ansi contains three modules to perform different kind of convertion
+-img2ascii
+-img2braile
+-img2block
 ```
-usage: img2ansi [-h] [-a Character Set] [-A] [-b] [-B] [-c R G B] [-D] [-f]
-                [-F] [-i] [-k] [-n] [-r Width Height] [-s [output filename]]
-                [-t Threshold]
-                inputImage
+usage: img2ascii [-h] [-a Character Set] [-F R G B] [-B R G B] [-b] [-c] [-f]
+                 [-i] [-k] [-n] [-r Width Height] [-o [output filename]]
+                 inputImage
 
-Convert img to Ascii or Braile representation
+Convert img to Ascii representation
 
 positional arguments:
   inputImage            image to be converted
@@ -62,32 +63,89 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -a Character Set, --asciicharset Character Set
-                        Ascii custom character set (default : " .~*:+zM#&@$" )
-  -A, --ascii           Ascii Representation flag
-  -b, --bold            Bold flag
-  -B, --block           Block Representation flag
-  -c R G B, --color R G B
-                        Set Ansi RGB24 color of Braile representation, each
-                        channel is 8bits
-  -D, --braile          Dot/Braile Representation flag
-  -f, --foreground      Ascii Foreground flag
-  -F, --fullscreen      Fullscreen flag
-  -i, --invertPattern   "Invert ascii character set or Braile characters flag
-  -k, --blink           Blink flag
-  -n, --noecho          No echo flag
+                        ascii character set (default : " .~*:+zM#&@$" )
+  -F R G B, --frgdcolor R G B
+                        All characters with RGB24 foreground color
+  -B R G B, --bkgdcolor R G B
+                        All characters with RGB24 background color
+  -b, --bold            bold flag
+  -c, --color           foreground text as img colors
+  -f, --fullscreen      fullscreen flag
+  -i, --invertPattern   "invert ascii character set
+  -k, --blink           blink flag
+  -n, --noecho          no echo flag
   -r Width Height, --resize Width Height
-                        Resize image (0 0 keeps original size), if given -r
+                        resize image (0 0 keeps original size), if given -r
                         100 0 keeps aspectratio with 100px width
-  -s [output filename], --save [output filename]
-                        Save file (if no output filename) defaults to
-                        imgAscii.txt or imgBraile.txt or imgBlock.txt
+  -o [output filename], --save [output filename]
+                        save file (if no output filename) defaults to
+                        ascii.txt
+
+By default uses parameters -r 0 0 -a " .~*:+zM#&@$"
+
+```
+
+```
+usage: img2braile [-h] [-b] [-F R G B] [-B R G B] [-f] [-i] [-k] [-n]
+                  [-r Width Height] [-o [output filename]] [-t Threshold]
+                  inputImage
+
+Convert img to Braile representation
+
+positional arguments:
+  inputImage            image to be converted
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b, --bold            bold flag
+  -F R G B, --frgdcolor R G B
+                        All characters with RGB24 foreground color
+  -B R G B, --bkgdcolor R G B
+                        All characters with RGB24 background color
+  -f, --fullscreen      fullscreen flag
+  -i, --invertPattern   "invert Braile characters flag
+  -k, --blink           blink flag
+  -n, --noecho          no echo flag
+  -r Width Height, --resize Width Height
+                        resize image (0 0 keeps original size), if given -r
+                        100 0 keeps aspectratio with 100px width
+  -o [output filename], --save [output filename]
+                        save file (if no output filename) defaults to
+                        braile.txt
   -t Threshold, --threshold Threshold
-                        Set threshold to binarize img in braile convertion
+                        set threshold to binarize img in braile convertion
                         (0-255)
 
-By default utilizes -A -r 0 0
+By default -r 0 0 -t 127
+
+```
+
+```
+usage: img2block [-h] [-f] [-W] [-k] [-n] [-r Width Height]
+                 [-o [output filename]]
+                 inputImage
+
+Convert img to Block representation
+
+positional arguments:
+  inputImage            image to be converted
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f, --fullscreen      fullscreen flag
+  -W, --wholeblock      "Use one block per terminal cell
+  -k, --blink           blink flag
+  -n, --noecho          no echo flag
+  -r Width Height, --resize Width Height
+                        resize image (0 0 keeps original size), if given -r
+                        100 0 keeps aspectratio with 100px width
+  -o [output filename], --save [output filename]
+                        save file (if no output filename) defaults to
+                        block.txt
+
+By default uses 2 blocks per terminal cell and -r 0 0
 
 ```
 
 ## License 
-[MIT](https://github.com/dax99993/imgtoANSI/blob/main/LICENSE)
+[MIT](https://github.com/dax99993/img2ansi/blob/main/LICENSE)

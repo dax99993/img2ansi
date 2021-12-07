@@ -50,7 +50,7 @@ class Ascii(Converter):
     def print(self):
         print("".join(self.asciiRepr))
 
-    def save(self, filename="imgAscii.txt"):
+    def save(self, filename):
         with open(filename, 'w') as f:
             f.write(''.join(self.asciiRepr))
 

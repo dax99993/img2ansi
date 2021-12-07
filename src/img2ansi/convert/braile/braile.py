@@ -51,7 +51,7 @@ class Braile(Converter):
     def print(self):
         print("".join(self.braileRepr))
 
-    def save(self, filename="imgBraile.txt"):
+    def save(self, filename):
         with open(filename, 'w') as f:
             f.write(''.join(self.braileRepr))
 

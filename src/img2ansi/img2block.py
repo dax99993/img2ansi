@@ -47,9 +47,8 @@ def create_parser(args):
 
     parser.add_argument('-o', '--save', metavar="output filename",
                         nargs='?', type=str,
-                        help="""save file (if no output filename)
-                        defaults to block.txt""",
-                        default="block.txt")
+                        help="""save file""",
+                        default="")
 
     parser.add_argument('inputImage', type=str,
                         help='image to be converted'
@@ -58,7 +57,21 @@ def create_parser(args):
     return parser.parse_args(args)
 
 def main(argv=None):
-    #if __name__ == '__main__':
+    """
+    Handles all the program parameters and
+    calls to perform the convertion
+
+    Parameter
+    ---------
+    argv : list
+        A list of parameters
+
+    Returns
+    -------
+    str
+        The result of convertion
+    """
+
     # Create parser
     if( argv is None ):
         args = create_parser(sys.argv[1:])
@@ -68,6 +81,6 @@ def main(argv=None):
     commands = BlockCmd(args)
     # Call convert method
     result = commands.convert()
-    # return result of convertion
-    return result
+    # should i return result of convertion ?
+    # return result
 
