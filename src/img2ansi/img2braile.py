@@ -24,12 +24,17 @@ def create_parser(args):
                         action='store_true', help='bold flag',
                         default=False)
 
-    parser.add_argument('-c', '--color', metavar=("R", "G", "B"),
+    parser.add_argument('-F', '--frgdcolor', metavar=("R", "G", "B"),
                         nargs=3, type=int,
-                        help="""set Ansi RGB24 color whole text""",
+                        help="""All characters with RGB24 foreground color""",
                         default=[])
 
-    parser.add_argument('-F', '--fullscreen',
+    parser.add_argument('-B', '--bkgdcolor', metavar=("R", "G", "B"),
+                        nargs=3, type=int,
+                        help="""All characters with RGB24 background color""",
+                        default=[])
+
+    parser.add_argument('-f', '--fullscreen',
                         action='store_true', help='fullscreen flag',
                         default=False)
 
@@ -57,9 +62,8 @@ def create_parser(args):
     parser.add_argument('-o', '--save', metavar="output filename",
                         nargs='?', type=str,
                         help="""save file (if no output filename)
-                        defaults to imgAscii.txt or
-                        imgBraile.txt or imgBlock.txt""",
-                        default="")
+                        defaults to braile.txt""",
+                        default="braile.txt")
 
     parser.add_argument('-t', '--threshold', metavar=("Threshold"),
                         nargs=1, type=int,

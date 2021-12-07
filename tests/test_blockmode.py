@@ -7,7 +7,8 @@ def test_block_convertion():
             Keep original size -r 0 0,
             noecho (externally echoed to visual check) -n
           """)
-    res = main(['tests/test_pic1.png', '-n', '-r', '0', '0' ])
+    res = main(['tests/test_pic1.png',
+                '-n', '-r', '0', '0' ])
     # Print externally to visually verify it
     print("".join(res))
     assert res != ""
@@ -16,9 +17,12 @@ def test_block_convertion():
 def test_block_resize_width():
     print("""Block,
             Keep aspect ratio given WIDTH size -r 30 0,
+            Blink -k
           """)
     # Output should have square dimensions
-    res = main(['tests/test_pic2.webp', '-r', '30', '0'])
+    res = main(['tests/test_pic2.webp',
+                '-r', '30', '0',
+                '-k'])
     assert res != ""
 
 def test_block_resize_height():
@@ -26,9 +30,20 @@ def test_block_resize_height():
             Keep aspect ratio given WIDTH size -r 0 40,
           """)
     # Output should have square dimensions
-    res = main(['tests/test_pic4.jpeg', '-r', '0', '40'])
+    res = main(['tests/test_pic4.jpeg',
+                '-r', '0', '40'])
     assert res != ""
 
+def test_block_resize_height2():
+    print("""Block,
+            Keep aspect ratio given WIDTH size -r 0 40,
+            Whole Block -W
+          """)
+    # Output should have square dimensions
+    res = main(['tests/test_pic4.jpeg',
+                '-r', '0', '40',
+                '-W'])
+    assert res != ""
 #def test_block_fullscreen_resize_height():
 #    print("""Block mode -B,
 #            Fullscreen -F

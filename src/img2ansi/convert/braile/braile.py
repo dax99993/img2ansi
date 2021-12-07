@@ -56,7 +56,9 @@ class Braile(Converter):
             f.write(''.join(self.braileRepr))
 
     def convert(self, img, ansimode=Ansi.NONE, invertPattern=False,
-                threshold=0x7f, frgdcolor=(0xff, 0xff, 0xff)):
+                threshold=0x7f,
+                frgdcolor=(0xff, 0xff, 0xff),
+                bkgdcolor=(0x00, 0x00, 0x00)):
         """
         Converts an img ( PIL ) to the braile unicode representation,
         the optional parameters allow to change the convertion of the img,
@@ -71,10 +73,17 @@ class Braile(Converter):
         # Ignores at most last 3 rows if height is not multiple of 4
         # Iterate through all image one window at a time
         for winy in range(0, height - (height % 4), 4):
-            # Add optional ansimode BKGDCOLOR is not available
-            # FRGD applies same color to all characters
+            # Add optional ansimode 
             self.braileRepr.append(get_ansi_seq(
-                ansimode & (~Ansi.BKGD), frgdcolor))
+                ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
+            # Add foreground
+            if(ansimode & Ansi.FRGD):
+                self.braileRepr.append(get_ansi_seq(
+                    Ansi.FRGD, frgdcolor))
+            # Add background
+            if(ansimode & Ansi.BKGD):
+                self.braileRepr.append(get_ansi_seq(
+                    Ansi.BKGD, bkgdcolor))
             for winx in range(0, width - (width % 2), 2):
                 # Get window pixels
                 win = windowing(Limg, winx, winy)

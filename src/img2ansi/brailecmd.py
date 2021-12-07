@@ -120,14 +120,11 @@ class BraileCmd():
 
         # Create instance of Braile converter
         self.converter = Braile()
-        if(self.colorRGB != []):
-            result = self.converter.convert(
+        result = self.converter.convert(
                     self.img, self.ansimode, self.invertPattern,
-                    self.threshold[0], self.colorRGB)
-        else:
-            result = self.converter.convert(
-                    self.img, self.ansimode, self.invertPattern,
-                    self.threshold[0])
+                    self.threshold[0],
+                    self.frgdcolor,
+                    self.bkgdcolor)
 
         if (self.noecho):
             self.converter.print()
@@ -146,7 +143,8 @@ class BraileCmd():
         # Open the img
         self.img = Image.open(args.inputImage)
         # Get Extra parameters
-        self.colorRGB = args.color
+        self.frgdcolor = args.frgdcolor
+        self.bkgdcolor = args.bkgdcolor
         self.invertPattern = args.invertPattern
         self.threshold = args.threshold
         self.noecho = args.noecho
@@ -155,15 +153,16 @@ class BraileCmd():
         # Setup ansimode
         self.ansimode = Ansi.NONE
         # Unset None if any ansi sequence is used
-        if(args.bold or args.blink or (self.colorRGB != [])):
+        if(args.bold or args.blink or
+           self.frgdcolor or self.bkgdcolor):
             self.ansimode &= ~Ansi.NONE
             if (args.bold):
                 self.ansimode |= Ansi.BOLD
             if (args.blink):
                 self.ansimode |= Ansi.BLINK
-            #if (args.bkgd):
-            #    self.ansimode |= Ansi.BKGD
-            if (self.colorRGB != []):
+            if ( self.bkgdcolor != [] ):
+                self.ansimode |= Ansi.BKGD
+            if ( self.frgdcolor != [] ):
                 self.ansimode |= Ansi.FRGD
         # Get resize parameters
         self.fullscreen = args.fullscreen

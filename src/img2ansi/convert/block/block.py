@@ -51,7 +51,7 @@ class Block(Converter):
 
         print("".join(self.blockRepr))
 
-    def save(self, filename="imgBlock.txt"):
+    def save(self, filename):
         """
         Save representation to a file
         """
@@ -59,18 +59,54 @@ class Block(Converter):
         with open(filename, "w") as f:
             f.write("".join(self.blockRepr))
 
-    def convert(self, img, ansimode=Ansi.NONE):
+    def convert(self, img, ansimode=Ansi.NONE, wholeblock=False):
         """
         Convert PIL (img) to unicode block representation
         """
 
+
+        if(wholeblock):
+            self.convert_wholeblock(img, ansimode)
+        else:
+            self.convert_halfblock(img, ansimode)
+
+        return self.blockRepr
+
+    def convert_wholeblock(self, img, ansimode):
+        # Convert img to RGB
+        rgbimg = img.convert("RGB")
+        # Get img dimensions
+        width = img.width
+        height = img.height
+        #
+        for y in range(0, height):
+            # Add optional ansi (just blink can be applied)
+            self.blockRepr.append( get_ansi_seq(ansimode & ~
+                                            Ansi.BKGD & ~
+                                            Ansi.FRGD))
+            for x in range(0, width):
+                # Add bkgdcolor
+                pixel = rgbimg.getpixel((x,y))
+                self.blockRepr.append(
+                    get_ansi_seq(Ansi.BKGD, pixel)
+                )
+                # Add empty space
+                self.blockRepr.append(" ")
+            self.blockRepr.append(get_ansi_seq(Ansi.RESET))
+            self.blockRepr.append("\n")
+
+
+    def convert_halfblock(self, img, ansimode):
         # Convert img to RGB
         rgbimg = img.convert("RGB")
         # Get img dimensions
         width = img.width
         height = img.height
         # Iterate through image in 1x2 window
-        # Ignore at most 1 row
+        # Ignore at most 1 row 
+        # Need to get default background of terminal
+        # To add last row, but i'm lazy and dont know
+        # how to do it without importing curses
         for y in range(0, height - (height % 2), 2):
             # Add optional ansi
             # This convertion mode doesn't support custom
@@ -96,4 +132,4 @@ class Block(Converter):
             self.blockRepr.append(get_ansi_seq(Ansi.RESET))
             self.blockRepr.append("\n")
 
-        return self.blockRepr
+

@@ -18,10 +18,17 @@ def test_braile_convertion():
 def test_braile_resize_width():
     print("""Braile,
             Keep aspect ratio given WIDTH size -r 30 0,
-            Color -c 255 150 150
+            Foreground -F 255 150 150
+            Background -B 255 255 255
+            InvertPattern -i
           """)
     # Output should have square dimensions
-    res = main(['tests/test_pic2.webp', '-r', '30', '0', '-c', '255', '150', '150'])
+    res = main(['tests/test_pic2.webp',
+                '-r', '30', '0',
+                '-F', '255', '150', '150',
+                '-B', '255', '255', '255',
+                '-i'
+                ])
     assert res != ""
 
 def test_braile_resize_height():

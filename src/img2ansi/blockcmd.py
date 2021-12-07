@@ -60,43 +60,76 @@ class BlockCmd():
 
         """
         if(self.fullscreen):
-            # Resize to fullscreen
+            # Resize to fullscreen -Fr 0 0
             if(self.resizewidth == 0 and self.resizeheight == 0):
                 w, h = get_terminal_size()
-                self.img = self.img.resize((w, 2 * h),
+                if(self.wholeblock):
+                    self.img = self.img.resize((w, h),
                                             Image.LANCZOS)
-            # Resize keeping aspect ratio, height -> terminal height
+                else:
+                    self.img = self.img.resize((w, 2 * h),
+                                            Image.LANCZOS)
+            # Keep aspect ratio, height -> terminal height -F -r 0 y
             elif(self.resizewidth == 0 and self.resizeheight != 0):
                 AspectRatio = self.img.width / self.img.height
                 _, h = get_terminal_size()
-                self.img = self.img.resize(
+                if(self.wholeblock):
+                    self.img = self.img.resize(
+                        (int(h * AspectRatio), h), Image.LANCZOS)
+                else:
+                    self.img = self.img.resize(
                         (int(1 * h * AspectRatio), 2 * h), Image.LANCZOS)
-            # Resize keeping aspect ratio, width -> terminal width
+            # Keep aspect ratio, width -> terminal width -Fr x 0
             elif(self.resizewidth != 0 and self.resizeheight == 0):
                 AspectRatio = self.img.height / self.img.width
                 w, _ = get_terminal_size()
-                self.img = self.img.resize(
+                if(self.wholeblock):
+                    self.img = self.img.resize(
+                        (w, int(w * AspectRatio)), Image.LANCZOS)
+                else:
+                    self.img = self.img.resize(
                         (1 * w, int(2 * w * AspectRatio)), Image.LANCZOS)
+            # Resize to given size -Fr x y.
             elif(self.resizewidth != 0 and self.resizeheight != 0):
-                self.img = self.img.resize(
+                if(self.wholeblock):
+                    self.img = self.img.resize(
+                        (self.resizewidth, self.resizeheight),
+                        Image.LANCZOS)
+                else:
+                    self.img = self.img.resize(
                         (1 * self.resizewidth, 2 * self.resizeheight),
                         Image.LANCZOS)
         else:
-            # Resize to given size
+            # Resize to given size -r x y
             if(self.resizewidth != 0 and self.resizeheight != 0):
-                self.img = self.img.resize(
+                if(self.wholeblock):
+                    self.img = self.img.resize(
+                        (2 * self.resizewidth, self.resizeheight),
+                        Image.LANCZOS)
+                else:
+                    self.img = self.img.resize(
                         (1 * self.resizewidth, 2 * self.resizeheight),
                         Image.LANCZOS)
-            # Resize keeping aspect ratio, height -> resizeheight
+            # Keep aspect ratio, height -> resizeheight -r 0 y
             elif(self.resizewidth == 0 and self.resizeheight != 0):
                 AspectRatio = self.img.width / self.img.height
-                self.img = self.img.resize(
+                if(self.wholeblock):
+                    self.img = self.img.resize(
+                        (int(2 * self.resizeheight * AspectRatio),
+                         self.resizeheight), Image.LANCZOS)
+                else:
+                    self.img = self.img.resize(
                         (int(2 * self.resizeheight * AspectRatio),
                          2 * self.resizeheight), Image.LANCZOS)
-            # Resize keeping aspect ratio, width -> resizewidth
+            # Keep aspect ratio, width -> resizewidth -r x 0
             elif(self.resizewidth != 0 and self.resizeheight == 0):
                 AspectRatio = self.img.height / self.img.width
-                self.img = self.img.resize((2 * self.resizewidth,
+                if(self.wholeblock):
+                    self.img = self.img.resize((self.resizewidth,
+                        int(2 * self.resizewidth * AspectRatio)),
+                        Image.LANCZOS)
+                else:
+                    self.img = self.img.resize((2 * self.resizewidth,
                         int(2 * self.resizewidth * AspectRatio)),
                         Image.LANCZOS)
 
@@ -111,7 +144,7 @@ class BlockCmd():
 
         # Create instance of Block converter
         self.converter = Block()
-        result = self.converter.convert(self.img, self.ansimode)
+        result = self.converter.convert(self.img, self.ansimode, self.wholeblock)
         if (self.noecho):
             self.converter.print()
         if (self.save):
@@ -129,6 +162,7 @@ class BlockCmd():
         # Open the img
         self.img = Image.open(args.inputImage)
         # Get Extra parameters
+        self.wholeblock = args.wholeblock
         self.noecho = args.noecho
         self.save = args.save
         # Get Ansi flags and

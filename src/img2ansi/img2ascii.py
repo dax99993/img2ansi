@@ -26,15 +26,25 @@ def create_parser(args):
                         " .~*:+zM#&@$" )""",
                         default=" .~*:+zM#&@$")
 
+    parser.add_argument('-F', '--frgdcolor', metavar=("R", "G", "B"),
+                        nargs=3, type=int,
+                        help="""All characters with RGB24 foreground color""",
+                        default=[])
+
+    parser.add_argument('-B', '--bkgdcolor', metavar=("R", "G", "B"),
+                        nargs=3, type=int,
+                        help="""All characters with RGB24 background color""",
+                        default=[])
+
     parser.add_argument('-b', '--bold',
                         action='store_true', help='bold flag',
                         default=False)
 
-    parser.add_argument('-f', '--foreground',
-                        action='store_true', help='foreground flag',
+    parser.add_argument('-c', '--color',
+                        action='store_true', help='foreground text as img colors',
                         default=False)
 
-    parser.add_argument('-F', '--fullscreen',
+    parser.add_argument('-f', '--fullscreen',
                         action='store_true', help='fullscreen flag',
                         default=False)
 

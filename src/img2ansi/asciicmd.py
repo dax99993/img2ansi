@@ -115,7 +115,14 @@ class AsciiCmd():
 
         # Create an instance of Ascii converter
         self.converter = Ascii(self.asciicharset)
-        result = self.converter.convert(
+        if(self.frgdcolor or self.bkgdcolor):
+            result = self.converter.convert(
+                self.img, self.ansimode, self.invertPattern,
+                self.frgdcolor != [], self.frgdcolor,
+                self.bkgdcolor != [], self.bkgdcolor,
+                )
+        else:
+            result = self.converter.convert(
                 self.img, self.ansimode, self.invertPattern)
 
         if (self.noecho):
@@ -135,6 +142,8 @@ class AsciiCmd():
         # Open the img
         self.img = Image.open(args.inputImage)
         # Get Extra parameters
+        self.frgdcolor = args.frgdcolor
+        self.bkgdcolor = args.bkgdcolor
         self.asciicharset = args.asciicharset
         self.invertPattern = args.invertPattern
         self.noecho = args.noecho
@@ -143,15 +152,13 @@ class AsciiCmd():
         # Setup ansimode
         self.ansimode = Ansi.NONE
         # Unset None if any ansi sequence is used
-        if(args.bold or args.blink or args.foreground):
+        if(args.bold or args.blink or args.color):
             self.ansimode &= ~Ansi.NONE
             if (args.bold):
                 self.ansimode |= Ansi.BOLD
             if (args.blink):
                 self.ansimode |= Ansi.BLINK
-            #if (args.bkgd):
-            #    self.ansimode |= Ansi.BKGD
-            if (args.foreground):
+            if (args.color):
                 self.ansimode |= Ansi.FRGD
         # Get resize parameters
         self.fullscreen = args.fullscreen

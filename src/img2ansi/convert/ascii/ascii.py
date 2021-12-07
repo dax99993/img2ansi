@@ -59,7 +59,9 @@ class Ascii(Converter):
         self.asciiCodeLen. len(self.asciiCode) - 1
 
     def convert(self, img, ansimode=Ansi.NONE, invertPattern=False,
-                color=(0xff, 0xff, 0xff)):
+                frgdfix=False, frgdcolor=(0xff, 0xff, 0xff),
+                bkgdfix=False, bkgdcolor=(0x00, 0x00, 0x00)
+                ):
         """
         Converts a PIL (img) to the ascii representation
         """
@@ -87,7 +89,15 @@ class Ascii(Converter):
                 else:
                     index = Lpixel * self.asciiCodeLen // 0xff
                 # Add Color
-                if(Ansi.FRGD & ansimode):
+                # Fixed bkgdcolor
+                if(bkgdfix):
+                    self.asciiRepr.append(
+                        get_ansi_seq(Ansi.BKGD, bkgdcolor))
+                # Fixd frgdcolor has priority over img color
+                if(frgdfix):
+                    self.asciiRepr.append(
+                        get_ansi_seq(Ansi.FRGD, frgdcolor))
+                elif(Ansi.FRGD & ansimode):
                     # Get RGB component of pixel
                     rgbpixel = RGBimg.getpixel((x, y))
                     self.asciiRepr.append(
@@ -95,7 +105,8 @@ class Ascii(Converter):
                 # Add the character
                 self.asciiRepr.append( self.asciiCode[index] )
             # Add newline at the end of row
-            if(ansimode & Ansi.NONE):
+            if((ansimode & Ansi.NONE) and
+               not(frgdfix) and not(bkgdcolor)):
                 self.asciiRepr.append("\n")
             else:
                 # Reset Ansi for next row

@@ -17,19 +17,18 @@ def create_parser(args):
     # Setup parser
     parser = argparse.ArgumentParser(
         description="Convert img to Block representation",
-        epilog="""By default -r 0 0 """,
+        epilog="""By default uses 2 blocks per terminal cell
+                and -r 0 0 """,
     )
 
-    parser.add_argument('-F', '--fullscreen',
+    parser.add_argument('-f', '--fullscreen',
                         action='store_true', help='fullscreen flag',
                         default=False)
 
-    #add flag for hald block or full block
-    #parser.add_argument('-', '--invertPattern',
-    #                    action='store_true',
-    #                    help=""""Invert ascii character set or
-    #                    Braile characters flag""",
-    #                    default=False)
+    parser.add_argument('-W', '--wholeblock',
+                        action='store_true',
+                        help=""""Use one block per terminal cell""",
+                        default=False)
 
     parser.add_argument('-k', '--blink',
                         action='store_true', help='blink flag',
