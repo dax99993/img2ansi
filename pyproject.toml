@@ -7,7 +7,9 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.scripts]
-img2ansi = "img2ansi.img2ansi:main"
+img2ascii = "img2ansi.img2ascii:main"
+img2braile = "img2ansi.img2braile:main"
+img2block = "img2ansi.img2block:main"
 
 [tool.poetry.dependencies]
 python = "^3.7"
