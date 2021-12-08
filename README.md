@@ -13,6 +13,9 @@ img2ansi is a simple package containing three CLI to convert an image to an ASCI
   <a href="https://pypi.org/project/PIL/">
     <img src="https://img.shields.io/badge/Dependencies-PIL-blue.svg?style=flat-square" alt="dependencies" />
   </a>
+  <a href="https://pypi.org/project/img2ansi/">
+    <img src="https://img.shields.io/badge/Package-img2ansi-red.svg?style=flat-square" alt="dependencies" />
+  </a>
 </div>
 
 ## Installation
