@@ -21,16 +21,6 @@ class Block(Converter):
     blockChar : str
         Unicode str of upper square solid block
 
-    Methods
-    -------
-    __init__()
-        Set the attributes to default values
-    print()
-        Print result of convertion to terminal
-    save(filename)
-        Save result of convertion to a file with given filename
-    convert()
-        Convert the img to the block representation
     """
 
     def __init__(self):
@@ -38,7 +28,7 @@ class Block(Converter):
         Initialize all attributes
         """
 
-        self.blockRepr = []
+        self.blockRepr = ""
         # Upper half block
         self.blockChar = "\u2580"
         # Lower half block
@@ -49,7 +39,7 @@ class Block(Converter):
         Print representation to terminal
         """
 
-        print("".join(self.blockRepr))
+        print(self.blockRepr)
 
     def save(self, filename):
         """
@@ -57,7 +47,7 @@ class Block(Converter):
         """
 
         with open(filename, "w") as f:
-            f.write("".join(self.blockRepr))
+            f.write(self.blockRepr)
 
     def convert(self, img, ansimode=Ansi.NONE, wholeblock=False):
         """
@@ -73,6 +63,10 @@ class Block(Converter):
         return self.blockRepr
 
     def convert_wholeblock(self, img, ansimode):
+        """
+        Convertion assign each block per terminal cell
+        """
+
         # Convert img to RGB
         rgbimg = img.convert("RGB")
         # Get img dimensions
@@ -81,22 +75,24 @@ class Block(Converter):
         #
         for y in range(0, height):
             # Add optional ansi (just blink can be applied)
-            self.blockRepr.append( get_ansi_seq(ansimode & ~
+            self.blockRepr += get_ansi_seq(ansimode & ~
                                             Ansi.BKGD & ~
-                                            Ansi.FRGD))
+                                            Ansi.FRGD)
             for x in range(0, width):
                 # Add bkgdcolor
                 pixel = rgbimg.getpixel((x,y))
-                self.blockRepr.append(
-                    get_ansi_seq(Ansi.BKGD, pixel)
-                )
+                self.blockRepr += get_ansi_seq(Ansi.BKGD,
+                                               pixel)
                 # Add empty space
-                self.blockRepr.append(" ")
-            self.blockRepr.append(get_ansi_seq(Ansi.RESET))
-            self.blockRepr.append("\n")
+                self.blockRepr += " "
+            self.blockRepr += get_ansi_seq(Ansi.RESET)
+            self.blockRepr += "\n"
 
 
     def convert_halfblock(self, img, ansimode):
+        """
+        Convertion assign two blocks per terminal cell
+        """
         # Convert img to RGB
         rgbimg = img.convert("RGB")
         # Get img dimensions
@@ -112,24 +108,22 @@ class Block(Converter):
             # This convertion mode doesn't support custom
             # background or foreground color since are already used
             # to color the blocks themselves
-            self.blockRepr.append( get_ansi_seq(ansimode & ~
+            self.blockRepr += get_ansi_seq(ansimode & ~
                                             Ansi.BKGD & ~
-                                            Ansi.FRGD))
+                                            Ansi.FRGD)
             for x in range(0, width):
                 # Get RGB pixel values
                 RGBupper = rgbimg.getpixel((x, y))
                 RGBlower = rgbimg.getpixel((x, y + 1))
                 # Set foreground to actual block char (upper block)
-                self.blockRepr.append(
-                    get_ansi_seq( Ansi.FRGD, RGBupper )
-                )
+                self.blockRepr += get_ansi_seq( Ansi.FRGD,
+                                               RGBupper)
                 # Set background to simulate block
-                self.blockRepr.append(
-                    get_ansi_seq( Ansi.BKGD, RGBlower )
-                )
-                self.blockRepr.append(self.blockChar)
+                self.blockRepr += get_ansi_seq( Ansi.BKGD,
+                                               RGBlower)
+                self.blockRepr += self.blockChar
             # Add newline char at each row end
-            self.blockRepr.append(get_ansi_seq(Ansi.RESET))
-            self.blockRepr.append("\n")
+            self.blockRepr += get_ansi_seq(Ansi.RESET)
+            self.blockRepr += "\n"
 
 

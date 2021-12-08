@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This script defines the img2ascii CLI parameters,
+and calls the according classes to perform the task
+"""
 
 import argparse
 import sys
@@ -103,7 +107,11 @@ def main(argv=None):
     # Create command instance and process commands
     commands = AsciiCmd(args)
     # Call convert method
-    result = commands.convert()
-    # should i return result of convertion ?
-    #return result
+    result, echo = commands.convert()
+    # should print the convertion to terminal
+    if(echo):
+        print(result)
+        #commands.print()
+        return result
+    return ""
 

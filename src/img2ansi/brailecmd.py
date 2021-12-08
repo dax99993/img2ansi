@@ -27,10 +27,10 @@ class BraileCmd():
         Image object to convert
     ansimode : int
         Bitwised flags to specify which ansi sequences to perform
-    colorRGB: bool
-        True if output should be keep original image colors
-    braile : bool
-        True if convertion utilizes braile unicode characters
+    frgdcolor: list
+        List of RGB24 foreground color
+    bkgdcolor: list
+        List of RGB24 background color
     invertPattern : bool
         True if convertion should use the character set inverted
     noecho : bool
@@ -49,16 +49,6 @@ class BraileCmd():
     converter : Converter Class
         Converter class that performs the actual convertion
 
-    Methods
-    -------
-    __init__(args)
-        Sets all attributes with args content and calls methods
-        resizeImg method if necessary and convert method
-    resizeImg()
-        Resize img attribute
-    convert()
-        Convert img to braile representation
-        utilizing Converter interface
     """
 
     def resizeImg(self):
@@ -111,10 +101,8 @@ class BraileCmd():
 
     def convert(self):
         """
-        Convert img to seleccted representation according to
-        selected converter
-
-        Utilizes imgConverter interface
+        Convert img to ascii representation according to
+        selected parameters
 
         """
 
@@ -136,8 +124,8 @@ class BraileCmd():
 
     def __init__(self, args):
         """
-        Set all the attributes and call _resize method if
-        necessary, afterwards call _convert method
+        Set all the attributes and call resize method if
+        necessary
         """
 
         # Open the img

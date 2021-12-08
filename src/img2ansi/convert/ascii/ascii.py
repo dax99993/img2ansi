@@ -10,7 +10,8 @@ from img2ansi.convert.ansi.ansi import *
 
 class Ascii(Converter):
     """
-    This class implements the ImgConverter Interface and
+    Convert a PIL (img) to a ascii representation
+    class implements the Converter interface and
     converts and image to it's representation using ascii
     characters.
 
@@ -21,40 +22,44 @@ class Ascii(Converter):
 
     Attributes
     ----------
-    asciiRepr : list
-        A list containing the result of convertion
+    asciiRepr : str
+        A str containing the result of convertion
     asciiCode : str
         A str containing the ascii character set to map light intensity
     asciiCodeLen : int
         Lenght of asciiCode
 
-    Methods
-    -------
-    __init__(ascii_charset)
-        Initialize attributes
-    setAsciiCharacterSet(ascii_charset)
-        Change the current ascii character set
-    print()
-        Print the result of convertion to terminal
-    save(filename)
-        Save the result of convertion to a file with given filename
-    convert(img, ansimode, invertPattern, color)
-        Convert the 
     """
 
     def __init__(self, ascii_charset):
-        self.asciiRepr = []
+        """
+        Initialize attributes
+        """
+
+        self.asciiRepr = ""
         self.asciiCode = ascii_charset
         self.asciiCodeLen = len(self.asciiCode) - 1
 
     def print(self):
-        print("".join(self.asciiRepr))
+        """
+        Print the result of convertion to terminal
+        """
+
+        print(self.asciiRepr)
 
     def save(self, filename):
+        """
+        Save the result of convertion to a file with given filename
+        """
+
         with open(filename, 'w') as f:
-            f.write(''.join(self.asciiRepr))
+            f.write(self.asciiRepr)
 
     def setAsciiCharacterSet(self, ascii_charset):
+        """
+        Change the current ascii character set
+        """
+
         self.asciiCode = ascii_charset
         self.asciiCodeLen. len(self.asciiCode) - 1
 
@@ -76,8 +81,9 @@ class Ascii(Converter):
         # Iterate through all pixels
         for y in range(height):
             # Add optional ansimode (blink, bold, etc)
-            self.asciiRepr.append(get_ansi_seq(
-                ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
+            self.asciiRepr += get_ansi_seq(ansimode & ~
+                                           Ansi.BKGD & ~
+                                           Ansi.FRGD)
             for x in range(width):
                 # Get Luma pixel
                 Lpixel = Limg.getpixel((x, y))
@@ -91,26 +97,26 @@ class Ascii(Converter):
                 # Add Color
                 # Fixed bkgdcolor
                 if(bkgdfix):
-                    self.asciiRepr.append(
-                        get_ansi_seq(Ansi.BKGD, bkgdcolor))
+                    self.asciiRepr += get_ansi_seq(Ansi.BKGD,
+                                                   bkgdcolor)
                 # Fixd frgdcolor has priority over img color
                 if(frgdfix):
-                    self.asciiRepr.append(
-                        get_ansi_seq(Ansi.FRGD, frgdcolor))
+                    self.asciiRepr += get_ansi_seq(Ansi.FRGD,
+                                                   frgdcolor)
                 elif(Ansi.FRGD & ansimode):
                     # Get RGB component of pixel
                     rgbpixel = RGBimg.getpixel((x, y))
-                    self.asciiRepr.append(
-                        get_ansi_seq(Ansi.FRGD, rgbpixel))
+                    self.asciiRepr += get_ansi_seq(Ansi.FRGD,
+                                                   rgbpixel)
                 # Add the character
-                self.asciiRepr.append( self.asciiCode[index] )
+                self.asciiRepr += self.asciiCode[index]
             # Add newline at the end of row
             if((ansimode & Ansi.NONE) and
                not(frgdfix) and not(bkgdcolor)):
-                self.asciiRepr.append("\n")
+                self.asciiRepr += "\n"
             else:
                 # Reset Ansi for next row
-                self.asciiRepr.append(get_ansi_seq(Ansi.RESET))
-                self.asciiRepr.append("\n")
+                self.asciiRepr += get_ansi_seq(Ansi.RESET)
+                self.asciiRepr += "\n"
 
         return self.asciiRepr

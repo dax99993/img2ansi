@@ -13,8 +13,7 @@ def test_ascii_convertion():
                 '-n', '-r', '0', '0', '-b',
                 '-F', '0', '255', '0'])
     # Print externally to visually verify it
-    print("".join(res))
-    assert res != ""
+    assert res == ""
 
 
 def test_ascii_resize_width():

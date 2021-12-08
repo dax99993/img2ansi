@@ -13,23 +13,27 @@ class Converter(ABC):
     and image (pixel data) to some other representation
     as ascii characters, unicode characters,maybe sixels, etc
 
-    Methods
-    -------
-    convert(img, mode)
-        Convert image to a given representation utilizing the specified mode
-    print()
-        Prints the result of convertion to the terminal
-    save()
-        Saves the result of convertion to a file
     """
     @abstractmethod
     def convert(self, img, mode):
+        """
+        Convert image to a given representation utilizing the specified mode
+        """
+
         pass
 
     @abstractmethod
     def print(self):
+        """
+        Prints the result of convertion to the terminal
+        """
+
         pass
 
     @abstractmethod
     def save(self):
+        """
+        Saves the result of convertion to a file
+        """
+
         pass

@@ -29,6 +29,8 @@ class BlockCmd():
         Bitwised flags to specify which ansi sequences to perform
     noecho : bool
         True if convertion not echoed to terminal when finished
+    wholeblock : bool
+        True if convertion utilizes Whole block mode
     save : list
         If true saves convertion to a file with a given filename
         also contained in the list
@@ -41,16 +43,6 @@ class BlockCmd():
     converter : Converter Class
         Converter class that performs the actual convertion
 
-    Methods
-    -------
-    __init__(args)
-        Sets all attributes with args content and calls methods
-        resizeImg method
-    resizeImg()
-        Resize img attribute
-    convert()
-        Convert img to ascii, braile, blocks representation
-        utilizing Converter interface
     """
 
     def resizeImg(self):
@@ -135,10 +127,8 @@ class BlockCmd():
 
     def convert(self):
         """
-        Convert img to seleccted representation according to
-        selected converter
-
-        Utilizes imgConverter interface
+        Convert img to block representation according to
+        selected parameters
 
         """
 
@@ -155,8 +145,8 @@ class BlockCmd():
 
     def __init__(self, args):
         """
-        Set all the attributes and call _resize method if
-        necessary, afterwards call _convert method
+        Set all the attributes and call resize method if
+        necessary
         """
 
         # Open the img

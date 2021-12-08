@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This script defines the img2braile CLI parameters,
+and calls the according classes to perform the task
+"""
 
 import argparse
 import sys

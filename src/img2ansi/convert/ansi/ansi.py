@@ -9,9 +9,10 @@ for any length character sequence
 from enum import IntFlag
 
 class Ansi(IntFlag):
-    """
-    This class allows the use of
-    parametrized ANSI SEQUENCE CODES
+    """ Class defining ANSI Escape Sequence flags
+
+    This class allow the use of
+    ANSI Sequence codes as bitwise flags
 
     """
 
@@ -24,7 +25,7 @@ class Ansi(IntFlag):
 
 def get_ansi_seq(ANSIMODE, rgb=(0xff, 0xff, 0xff)):
     """
-    Get the corresponding ansi sequence
+    Get the corresponding ANSI sequence
 
     Parameters
     ----------
@@ -32,7 +33,7 @@ def get_ansi_seq(ANSIMODE, rgb=(0xff, 0xff, 0xff)):
         The ansi sequence to perform
     rgb : tupple
         A tupple containing the RGB components used for background
-        and foreground
+        or foreground sequence
 
     Returns
     -------

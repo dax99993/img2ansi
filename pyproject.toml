@@ -12,8 +12,9 @@ img2braile = "img2ansi.img2braile:main"
 img2block = "img2ansi.img2block:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-Pillow = "^5.4.1"
+python = "^3.9"
+Pillow = "^8.0.0"
+myst-nb = "^0.13.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

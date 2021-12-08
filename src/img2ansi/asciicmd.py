@@ -33,8 +33,6 @@ class AsciiCmd():
         True if convertion should use the character set inverted
     noecho : bool
         True if convertion not echoed to terminal when finished
-    threshold : int
-        Value to binarize image when performing braile convertion
     save : list
         If true saves convertion to a file with a given filename
         also contained in the list
@@ -47,22 +45,12 @@ class AsciiCmd():
     converter : Converter Class
         Converter class that performs the actual convertion
 
-    Methods
-    -------
-    __init__(args)
-        Sets all attributes with args content and calls methods
-        _resizeImg method if necessary and _convert method
-    resizeImg()
-        Resize img attribute
-    convert()
-        Convert img to ascii, braile, blocks representation
-        utilizing Converter interface
     """
 
     def resizeImg(self):
         """
         Resize img according to resizewidth, resizeheight and fullscreen
-        To perform resampling the LANCZOS algorithm is used.
+        to perform resampling the LANCZOS algorithm is used.
 
         """
         if(self.fullscreen):
@@ -106,10 +94,8 @@ class AsciiCmd():
 
     def convert(self):
         """
-        Convert img to seleccted representation according to
-        selected converter
-
-        Utilizes imgConverter interface
+        Convert img to ascii representation according to
+        selected parameters
 
         """
 
@@ -125,18 +111,16 @@ class AsciiCmd():
             result = self.converter.convert(
                 self.img, self.ansimode, self.invertPattern)
 
-        if (self.noecho):
-            self.converter.print()
         if (self.save):
             self.converter.save(self.save)
 
-        return result
+        return result, self.noecho
 
 
     def __init__(self, args):
         """
-        Set all the attributes and call _resize method if
-        necessary, afterwards call _convert method
+        Set all the attributes and call resize method if
+        necessary
         """
 
         # Open the img

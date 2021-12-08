@@ -13,7 +13,8 @@ from img2ansi.convert.braile.utilFunctions import *
 
 class Braile(Converter):
     """
-    This class implements the ImgConverter interface and
+    Convert a PIL (img) to a block representation
+    class implements the Converter interface and
     converts an image to it's representation using braile 8 dot unicode
     characters.
 
@@ -28,32 +29,30 @@ class Braile(Converter):
     braileCode : list
         A list containing all the braile characters used in convertion
 
-    Methods
-    -------
-    __init__()
-        Initialize attributes
-    _getBraileCode(pdata, invertPattern)
-        Gets the final character after windowing analysis
-    print()
-        Prints the content of braileRepr as a text file
-    save(filename)
-        Save content of braileRepr to an output file with given filename
-    convert(img, ansimode, invertPattern, threshold, color)
-        Perform the actual convertion of the image with given optional
-        parameters
     """
 
     def __init__(self):
-        # internal
-        self.braileRepr = []
+        """
+        Initialize attributes
+        """
+
+        self.braileRepr = ""
         self.braileCode = BRAILE
 
     def print(self):
-        print("".join(self.braileRepr))
+        """
+        Prints the content of braileRepr as a text file
+        """
+
+        print(self.braileRepr)
 
     def save(self, filename):
+        """
+        Save content of braileRepr to an output file with given filename
+        """
+
         with open(filename, 'w') as f:
-            f.write(''.join(self.braileRepr))
+            f.write(self.braileRepr)
 
     def convert(self, img, ansimode=Ansi.NONE, invertPattern=False,
                 threshold=0x7f,
@@ -64,6 +63,7 @@ class Braile(Converter):
         the optional parameters allow to change the convertion of the img,
         moreover allow the representation unicode with ANSI ESCAPE SEQUENCE
         """
+
         # Convert to Luma
         Limg = img.convert("L")
         # Get img dimensions
@@ -74,30 +74,31 @@ class Braile(Converter):
         # Iterate through all image one window at a time
         for winy in range(0, height - (height % 4), 4):
             # Add optional ansimode 
-            self.braileRepr.append(get_ansi_seq(
-                ansimode & ~ Ansi.BKGD & ~ Ansi.FRGD))
+            self.braileRepr += get_ansi_seq(ansimode & ~
+                                            Ansi.BKGD & ~
+                                            Ansi.FRGD)
             # Add foreground
             if(ansimode & Ansi.FRGD):
-                self.braileRepr.append(get_ansi_seq(
-                    Ansi.FRGD, frgdcolor))
+                self.braileRepr += get_ansi_seq(Ansi.FRGD,
+                                                frgdcolor)
             # Add background
             if(ansimode & Ansi.BKGD):
-                self.braileRepr.append(get_ansi_seq(
-                    Ansi.BKGD, bkgdcolor))
+                self.braileRepr += get_ansi_seq(Ansi.BKGD,
+                                                bkgdcolor)
             for winx in range(0, width - (width % 2), 2):
                 # Get window pixels
                 win = windowing(Limg, winx, winy)
                 # Apply Filter
                 filteredwin = filter_window(win, "Binarize", threshold)
                 # Get braile code representation and add to representation
-                self.braileRepr.append(
-                    self.get_braile_char(filteredwin, invertPattern))
+                self.braileRepr += self.get_braile_char(filteredwin,
+                                                        invertPattern)
             # Add a newline at the end of row
             if (ansimode & Ansi.NONE):
-                self.braileRepr.append("\n")
+                self.braileRepr += "\n"
             else:
-                self.braileRepr.append(get_ansi_seq(Ansi.RESET))
-                self.braileRepr.append("\n")
+                self.braileRepr += get_ansi_seq(Ansi.RESET)
+                self.braileRepr += "\n"
 
         return self.braileRepr
 
