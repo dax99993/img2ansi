@@ -62,7 +62,7 @@ class Ascii():
         """
 
         self.asciiCode = ascii_charset
-        self.asciiCodeLen. len(self.asciiCode) - 1
+        self.asciiCodeLen = len(self.asciiCode) - 1
 
     def convert(self, img, ansimode=Ansi.NONE, invertPattern=False,
                 frgdfix=False, frgdcolor=(0xff, 0xff, 0xff),

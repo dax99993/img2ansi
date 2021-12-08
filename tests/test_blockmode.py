@@ -9,9 +9,7 @@ def test_block_convertion():
           """)
     res = main(['tests/test_pic1.png',
                 '-n', '-r', '0', '0' ])
-    # Print externally to visually verify it
-    print("".join(res))
-    assert res != ""
+    assert res == ""
 
 
 def test_block_resize_width():
@@ -23,6 +21,8 @@ def test_block_resize_width():
     res = main(['tests/test_pic2.webp',
                 '-r', '30', '0',
                 '-k'])
+    print("Externally printing result for check!")
+    print(res)
     assert res != ""
 
 def test_block_resize_height():
@@ -32,6 +32,8 @@ def test_block_resize_height():
     # Output should have square dimensions
     res = main(['tests/test_pic4.jpeg',
                 '-r', '0', '40'])
+    print("Externally printing result for check!")
+    print(res)
     assert res != ""
 
 def test_block_resize_height2():
@@ -43,12 +45,6 @@ def test_block_resize_height2():
     res = main(['tests/test_pic4.jpeg',
                 '-r', '0', '40',
                 '-W'])
+    print("Externally printing result for check!")
+    print(res)
     assert res != ""
-#def test_block_fullscreen_resize_height():
-#    print("""Block mode -B,
-#            Fullscreen -F
-#           Keep aspect ratio given WIDTH size -r 0 10,
-#          """)
-#    # Output should have square dimensions
-#    res = main(['tests/test_pic3.jpg','-B', '-F', '-r', '0', '40'])
-#    assert res != ""

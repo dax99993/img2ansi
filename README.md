@@ -8,7 +8,7 @@ img2ansi is a simple package containing three CLI to convert an image to an ASCI
   <a href="https://github.com/dax99993/img2ansi/blob/main/demo/demo.md">Demo</a>
   <br/><br/>
   <a href="https://github.com/dax99993/img2ansi/blob/main/LICENSE">
-    <img alt="NPM" src="https://img.shields.io/npm/l/GPL2">
+    <img src="https://img.shields.io/badge/License-GPL2-greee.svg?style=flat-square" alt="license" />
   </a>
   <a href="https://pypi.org/project/PIL/">
     <img src="https://img.shields.io/badge/Dependencies-PIL-blue.svg?style=flat-square" alt="dependencies" />
@@ -18,7 +18,7 @@ img2ansi is a simple package containing three CLI to convert an image to an ASCI
 ## Installation
 
 ```bash
-$ pip install img2ansi
+$ Python3 -m pip install img2ansi
 ```
 
 ## Features

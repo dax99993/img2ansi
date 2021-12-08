@@ -10,9 +10,9 @@ def test_braile_convertion():
             Bold -b
           """)
     res = main(['tests/test_pic3.jpg', '-n', '-r', '0', '0', '-t', '150', '-b'])
-    # Print externally to visually verify it
-    print("".join(res))
-    assert res != ""
+    print("Externally printing result for check!")
+    print(res)
+    assert res == ""
 
 
 def test_braile_resize_width():
@@ -29,6 +29,8 @@ def test_braile_resize_width():
                 '-B', '255', '255', '255',
                 '-i'
                 ])
+    print("Externally printing result for check!")
+    print(res)
     assert res != ""
 
 def test_braile_resize_height():
@@ -38,5 +40,7 @@ def test_braile_resize_height():
           """)
     # Output should have square dimensions
     res = main(['tests/test_pic4.jpeg', '-r', '0', '40', '-k'])
+    print("Externally printing result for check!")
+    print(res)
     assert res != ""
 

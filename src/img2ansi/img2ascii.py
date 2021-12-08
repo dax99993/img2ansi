@@ -126,7 +126,8 @@ def main(argv=None):
                          args.fullscreen)
     # Change character set if necessary
     if(args.asciicharset != ""):
-        convert.set_charset(args.asciicharset)
+        print(args.asciicharset)
+        converter.set_charset(args.asciicharset)
     # Perform convertion
     if(args.frgdcolor != [] or args.bkgdcolor != []):
         result = converter.convert(
