@@ -4,11 +4,12 @@ This script implements a class to perform image to ascii convertion
 
 """
 
-from img2ansi.convert.converter import Converter
-from img2ansi.convert.ansi.ansi import *
+from PIL import Image
+from os import get_terminal_size
+from img2ansi.ansi.ansi import *
 
 
-class Ascii(Converter):
+class Ascii():
     """
     Convert a PIL (img) to a ascii representation
     class implements the Converter interface and
@@ -31,13 +32,13 @@ class Ascii(Converter):
 
     """
 
-    def __init__(self, ascii_charset):
+    def __init__(self):
         """
         Initialize attributes
         """
 
         self.asciiRepr = ""
-        self.asciiCode = ascii_charset
+        self.asciiCode = " .~*:+zM#&@$"
         self.asciiCodeLen = len(self.asciiCode) - 1
 
     def print(self):
@@ -55,7 +56,7 @@ class Ascii(Converter):
         with open(filename, 'w') as f:
             f.write(self.asciiRepr)
 
-    def setAsciiCharacterSet(self, ascii_charset):
+    def set_charset(self, ascii_charset):
         """
         Change the current ascii character set
         """
@@ -71,6 +72,8 @@ class Ascii(Converter):
         Converts a PIL (img) to the ascii representation
         """
 
+        # Reset representation
+        self.asciiRepr = ""
         # Convert to RGB
         RGBimg = img.convert("RGB")
         # Convert to Luma
@@ -120,3 +123,50 @@ class Ascii(Converter):
                 self.asciiRepr += "\n"
 
         return self.asciiRepr
+
+    def resize(self, img, width, height, fullscreen):
+        """
+        Resize img according to resizewidth, resizeheight and fullscreen
+        to perform resampling the LANCZOS algorithm is used.
+
+        """
+        if(fullscreen):
+            # Resize to fullscreen
+            if(width == 0 and height == 0):
+                w, h = get_terminal_size()
+                rimg = img.resize((w, h), Image.LANCZOS)
+            # Resize keeping aspect ratio, height -> terminal height
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                _, h = get_terminal_size()
+                rimg = img.resize(
+                    (int(h * AspectRatio), h), Image.LANCZOS)
+            # Resize keeping aspect ratio, width -> terminal width
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                w, _ = get_terminal_size()
+                rimg = img.resize(
+                    (w, int(w * AspectRatio)), Image.LANCZOS)
+            elif(width != 0 and height != 0):
+                rimg = img.resize(
+                    (width, height),
+                    Image.LANCZOS)
+        else:
+            # Resize to given size
+            if(width != 0 and height != 0):
+                rimg = img.resize(
+                    (width, height),
+                    Image.LANCZOS)
+            # Resize keeping aspect ratio, height -> resizeheight
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                rimg = img.resize(
+                    (int(height * AspectRatio),
+                    height), Image.LANCZOS)
+            # Resize keeping aspect ratio, width -> resizewidth
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                rimg = img.resize((width, int(
+                    width * AspectRatio)), Image.LANCZOS)
+
+        return rimg

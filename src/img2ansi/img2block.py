@@ -4,9 +4,9 @@ This script defines the img2block CLI parameters,
 and calls the according classes to perform the task
 """
 
-import argparse
 import sys
-from img2ansi.blockcmd import BlockCmd
+import argparse
+from img2ansi.block.block import *
 
 
 def create_parser(args):
@@ -39,8 +39,8 @@ def create_parser(args):
                         default=False)
 
     parser.add_argument('-n', '--noecho',
-                        action='store_false', help="no echo flag",
-                        default=True)
+                        action='store_true', help="no echo flag",
+                        default=False)
 
     parser.add_argument('-r', '--resize', metavar=("Width", "Height"),
                         nargs=2, type=int,
@@ -73,7 +73,7 @@ def main(argv=None):
     Returns
     -------
     str
-        The result of convertion
+        The result of convertion or empty str
     """
 
     # Create parser
@@ -81,10 +81,29 @@ def main(argv=None):
         args = create_parser(sys.argv[1:])
     else:
         args = create_parser(argv)
-    # Create command instance and process commands
-    commands = BlockCmd(args)
+    # Create instance
+    converter = Block()
+    # ** Handle all parameters **
+    img = Image.open(args.inputImage)
+    # Setup ansimode
+    ansimode = Ansi.NONE
+    # Unset None if any ansi sequence is used
+    if(args.blink):
+        ansimode &= ~Ansi.NONE
+        ansimode |= Ansi.BLINK
+    # Resize if necessary
+    if(args.resize != [0,0]):
+        img = converter.resize(img, *args.resize,
+                         args.fullscreen,
+                         args.wholeblock)
     # Call convert method
-    result = commands.convert()
-    # should i return result of convertion ?
-    # return result
-
+    result = converter.convert(img, ansimode,
+                               args.wholeblock)
+    # Save to file
+    if (args.save != ""):
+        converter.save(args.save)
+    # if echo return result
+    if(args.noecho == False):
+        return result
+    # return empty string
+    return ""

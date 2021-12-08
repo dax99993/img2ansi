@@ -5,10 +5,11 @@ preview an approximation of the image on the terminal
 
 """
 
-from img2ansi.convert.converter import Converter
-from img2ansi.convert.ansi.ansi import *
+from PIL import Image
+from os import get_terminal_size
+from img2ansi.ansi.ansi import *
 
-class Block(Converter):
+class Block():
     """
     Convert a PIL (img) to a block representation
     basically show the actual image with a lower
@@ -67,6 +68,8 @@ class Block(Converter):
         Convertion assign each block per terminal cell
         """
 
+        # Reset representation
+        self.blockRepr = ""
         # Convert img to RGB
         rgbimg = img.convert("RGB")
         # Get img dimensions
@@ -126,4 +129,85 @@ class Block(Converter):
             self.blockRepr += get_ansi_seq(Ansi.RESET)
             self.blockRepr += "\n"
 
+    def resize(self, img, width, height, fullscreen, wholeblock):
+        """
+        Resize img according to width, height and fullscreen
+        To perform resampling the LANCZOS algorithm is used.
+
+        """
+        if(fullscreen):
+            # Resize to fullscreen -Fr 0 0
+            if(width == 0 and height == 0):
+                w, h = get_terminal_size()
+                if(wholeblock):
+                    rimg = img.resize((w, h),
+                                            Image.LANCZOS)
+                else:
+                    rimg = img.resize((w, 2 * h),
+                                            Image.LANCZOS)
+            # Keep aspect ratio, height -> terminal height -F -r 0 y
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                _, h = get_terminal_size()
+                if(wholeblock):
+                    rimg = img.resize(
+                        (int(h * AspectRatio), h), Image.LANCZOS)
+                else:
+                    rimg = img.resize(
+                        (int(1 * h * AspectRatio), 2 * h), Image.LANCZOS)
+            # Keep aspect ratio, width -> terminal width -Fr x 0
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                w, _ = get_terminal_size()
+                if(wholeblock):
+                    rimg = img.resize(
+                        (w, int(w * AspectRatio)), Image.LANCZOS)
+                else:
+                    rimg = img.resize(
+                        (1 * w, int(2 * w * AspectRatio)), Image.LANCZOS)
+            # Resize to given size -Fr x y.
+            elif(width != 0 and height != 0):
+                if(wholeblock):
+                    rimg = img.resize(
+                        (width, height),
+                        Image.LANCZOS)
+                else:
+                    rimg = img.resize(
+                        (1 * width, 2 * height),
+                        Image.LANCZOS)
+        else:
+            # Resize to given size -r x y
+            if(width != 0 and height != 0):
+                if(wholeblock):
+                    rimg = img.resize(
+                        (2 * width, height),
+                        Image.LANCZOS)
+                else:
+                    rimg = img.resize(
+                        (1 * width, 2 * height),
+                        Image.LANCZOS)
+            # Keep aspect ratio, height -> resizeheight -r 0 y
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                if(wholeblock):
+                    rimg = img.resize(
+                        (int(2 * height * AspectRatio),
+                         height), Image.LANCZOS)
+                else:
+                    rimg = img.resize(
+                        (int(2 * height * AspectRatio),
+                         2 * height), Image.LANCZOS)
+            # Keep aspect ratio, width -> resizewidth -r x 0
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                if(wholeblock):
+                    rimg = img.resize((width,
+                        int(2 * width * AspectRatio)),
+                        Image.LANCZOS)
+                else:
+                    rimg = img.resize((2 * width,
+                        int(2 * width * AspectRatio)),
+                        Image.LANCZOS)
+
+        return rimg
 

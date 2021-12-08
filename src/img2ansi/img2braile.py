@@ -4,9 +4,9 @@ This script defines the img2braile CLI parameters,
 and calls the according classes to perform the task
 """
 
-import argparse
 import sys
-from img2ansi.brailecmd import BraileCmd
+import argparse
+from img2ansi.braile.braile import *
 
 
 def create_parser(args):
@@ -53,8 +53,8 @@ def create_parser(args):
                         default=False)
 
     parser.add_argument('-n', '--noecho',
-                        action='store_false', help="no echo flag",
-                        default=True)
+                        action='store_true', help="no echo flag",
+                        default=False)
 
     parser.add_argument('-r', '--resize', metavar=("Width", "Height"),
                         nargs=2, type=int,
@@ -93,7 +93,7 @@ def main(argv=None):
     Returns
     -------
     str
-        The result of convertion
+        The result of convertion or empty str
     """
 
     # Create parser
@@ -101,10 +101,39 @@ def main(argv=None):
         args = create_parser(sys.argv[1:])
     else:
         args = create_parser(argv)
-    # Create command instance and process commands
-    commands = BraileCmd(args)
+    # Create instance of converter
+    converter = Braile()
+    # ** Handle all parameters **
+    img = Image.open(args.inputImage)
+    # Setup ansimode
+    ansimode = Ansi.NONE
+    # Unset None if any ansi sequence is used
+    if(args.bold or args.blink or
+        args.frgdcolor or args.bkgdcolor):
+        ansimode &= ~Ansi.NONE
+        if (args.bold):
+            ansimode |= Ansi.BOLD
+        if (args.blink):
+            ansimode |= Ansi.BLINK
+        if ( args.bkgdcolor != [] ):
+            ansimode |= Ansi.BKGD
+        if ( args.frgdcolor != [] ):
+            ansimode |= Ansi.FRGD
+    # Resize if necessary
+    if (args.resize != [0,0]):
+        img = converter.resize(img, *args.resize, args.fullscreen)
     # Call convert method
-    result = commands.convert()
-    # should i return result of convertion ?
-    # return result
+    result = converter.convert(
+                    img, ansimode, args.invertPattern,
+                    args.threshold[0],
+                    args.frgdcolor,
+                    args.bkgdcolor)
+    # Save to file  
+    if (args.save):
+        converter.save(args.save)
+    # if echo return result
+    if(args.noecho == False):
+        return result
+    # return empty string
+    return ""
 

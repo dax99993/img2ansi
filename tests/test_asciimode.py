@@ -12,8 +12,10 @@ def test_ascii_convertion():
     res = main(['tests/test_pic3.jpg',
                 '-n', '-r', '0', '0', '-b',
                 '-F', '0', '255', '0'])
+    print("Externally printing result for check!")
+    print(res)
     # Print externally to visually verify it
-    assert res == ""
+    assert res != ""
 
 
 def test_ascii_resize_width():

@@ -1,6 +1,6 @@
 <div align="center">
   <h3>
-img2ansi is a simple package containing three CLI to convert an image to an ASCII or BRAILE/DOT or BLOCK representation with support for <a href ="https://en.wikipedia.org/wiki/ANSI_escape_code" > ANSI escape code sequence </a>
+img2ansi is a simple package containing three CLI to convert an image to an ASCII, BRAILE/DOT, BLOCK representation with support for <a href ="https://en.wikipedia.org/wiki/ANSI_escape_code" > ANSI escape code sequence </a>
   </h3>
 </div>
 

@@ -4,9 +4,9 @@ This script defines the img2ascii CLI parameters,
 and calls the according classes to perform the task
 """
 
-import argparse
 import sys
-from img2ansi.asciicmd import AsciiCmd
+import argparse
+from img2ansi.ascii.ascii import *
 
 
 def create_parser(args):
@@ -28,7 +28,7 @@ def create_parser(args):
                         type=str,
                         help="""ascii character set (default :
                         " .~*:+zM#&@$" )""",
-                        default=" .~*:+zM#&@$")
+                        default="")
 
     parser.add_argument('-F', '--frgdcolor', metavar=("R", "G", "B"),
                         nargs=3, type=lambda x: int(x,0),
@@ -62,8 +62,8 @@ def create_parser(args):
                         default=False)
 
     parser.add_argument('-n', '--noecho',
-                        action='store_false', help="no echo flag",
-                        default=True)
+                        action='store_true', help="no echo flag",
+                        default=False)
 
     parser.add_argument('-r', '--resize', metavar=("Width", "Height"),
                         nargs=2, type=int,
@@ -96,7 +96,7 @@ def main(argv=None):
     Returns
     -------
     str
-        The result of convertion
+        The result of convertion or empty str
     """
 
     # Create parser
@@ -104,14 +104,45 @@ def main(argv=None):
         args = create_parser(sys.argv[1:])
     else:
         args = create_parser(argv)
-    # Create command instance and process commands
-    commands = AsciiCmd(args)
-    # Call convert method
-    result, echo = commands.convert()
-    # should print the convertion to terminal
-    if(echo):
-        print(result)
-        #commands.print()
+    # Create instance
+    converter = Ascii()
+    # ** Handle all parameters **
+    # Open the img
+    img = Image.open(args.inputImage)
+    # Setup ansimode
+    ansimode = Ansi.NONE
+    # Unset None if any ansi sequence is used
+    if(args.bold or args.blink or args.color):
+        ansimode &= ~Ansi.NONE
+        if (args.bold):
+            ansimode |= Ansi.BOLD
+        if (args.blink):
+            ansimode |= Ansi.BLINK
+        if (args.color):
+            ansimode |= Ansi.FRGD
+    # Resize if necessary
+    if(args.resize != [0,0]):
+        img = converter.resize(img, *args.resize,
+                         args.fullscreen)
+    # Change character set if necessary
+    if(args.asciicharset != ""):
+        convert.set_charset(args.asciicharset)
+    # Perform convertion
+    if(args.frgdcolor != [] or args.bkgdcolor != []):
+        result = converter.convert(
+                img, ansimode, args.invertPattern,
+                args.frgdcolor != [], args.frgdcolor,
+                args.bkgdcolor != [], args.bkgdcolor,
+                )
+    else:
+        result = converter.convert(img, ansimode,
+                                   args.invertPattern)
+    # Save to file 
+    if(args.save != ""):
+        converter.save(args.save)
+    # if echo return result
+    if(args.noecho == False):
         return result
+    # return empty string
     return ""
 

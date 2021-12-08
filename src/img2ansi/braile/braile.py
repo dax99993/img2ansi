@@ -5,13 +5,14 @@ a windowing technique is used, as a consequence the result has the
 width reduced in half and height being a quarter of the original.
 """
 
-from img2ansi.convert.converter import Converter
-from img2ansi.convert.ansi.ansi import *
-from img2ansi.convert.braile.characters import BRAILE
-from img2ansi.convert.braile.utilFunctions import *
+from PIL import Image
+from os import get_terminal_size
+from img2ansi.ansi.ansi import *
+from img2ansi.braile.characters import BRAILE
+from img2ansi.braile.utilFunctions import *
 
 
-class Braile(Converter):
+class Braile():
     """
     Convert a PIL (img) to a block representation
     class implements the Converter interface and
@@ -54,7 +55,7 @@ class Braile(Converter):
         with open(filename, 'w') as f:
             f.write(self.braileRepr)
 
-    def convert(self, img, ansimode=Ansi.NONE, invertPattern=False,
+    def convert(self, img, ansimode, invertPattern=False,
                 threshold=0x7f,
                 frgdcolor=(0xff, 0xff, 0xff),
                 bkgdcolor=(0x00, 0x00, 0x00)):
@@ -64,6 +65,8 @@ class Braile(Converter):
         moreover allow the representation unicode with ANSI ESCAPE SEQUENCE
         """
 
+        # Empty
+        self.braileRepr = ""
         # Convert to Luma
         Limg = img.convert("L")
         # Get img dimensions
@@ -124,3 +127,58 @@ class Braile(Converter):
             return self.braileCode[~A][~B]
 
         return self.braileCode[A][B]
+
+    def resize(self, img, width, height, fullscreen):
+        """
+        Resize img according to width, height and fullscreen
+        To perform resampling the LANCZOS algorithm is used.
+
+        Returns
+        -------
+        PIL.Image
+            resized img
+        """
+
+        if(fullscreen):
+            # Resize to fullscreen
+            if(width == 0 and height == 0):
+                w, h = get_terminal_size()
+                rimg = img.resize((2 * w, 4 * h),
+                                            Image.LANCZOS)
+            # Resize keeping aspect ratio, height -> terminal height
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                _, h = get_terminal_size()
+                rimg = img.resize(
+                        (int(2 * h * AspectRatio), 4 * h), Image.LANCZOS)
+            # Resize keeping aspect ratio, width -> terminal width
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                w, _ = get_terminal_size()
+                rimg = img.resize(
+                        (2 * w, int(4 * w * AspectRatio)), Image.LANCZOS)
+            elif(width != 0 and height != 0):
+                rimg = img.resize((2 * width, 4 * height),
+                                  Image.LANCZOS)
+        else:
+            # Resize to given size
+            if(width != 0 and height != 0):
+                rimg = img.resize(
+                        (2 * width, 4 * height),
+                        Image.LANCZOS)
+            # Resize keeping aspect ratio, height -> resizeheight
+            elif(width == 0 and height != 0):
+                AspectRatio = img.width / img.height
+                rimg = img.resize(
+                        (int(2 * height * AspectRatio),
+                         4 * height), Image.LANCZOS)
+            # Resize keeping aspect ratio, width -> resizewidth
+            elif(width != 0 and height == 0):
+                AspectRatio = img.height / img.width
+                rimg = img.resize((2 * width,
+                        int(4 * width * AspectRatio)),
+                        Image.LANCZOS)
+            else:
+                rimg = img
+
+        return rimg
