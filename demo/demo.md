@@ -1,36 +1,28 @@
 # Demo
 
-<img src="https://github.com/dax99993/imgtoANSI/blob/main/demo/animegirl.jpg" width='350' height='350'>
+<img src="https://github.com/dax99993/imgt2ansi/blob/main/tests/test_pic6.jpg" width='350' height='350'>
 
 ```
- python imgtoansi.py animegirl.jpg -db
+ img2ascii tests/test_pic6.jpg -r 100 50 -cb
 ```
 
-<img src = "https://github.com/dax99993/imgtoANSI/blob/main/demo/animegirl_braile.png" width='350' height='350'>
+<img src="https://github.com/dax99993/imgt2ansi/blob/main/demo/demo_ascii.png" width='350' height='350'>
 
 
-<img src = "https://github.com/dax99993/imgtoANSI/blob/main/demo/mario.png" width='350' height='350'>
-
-```
- python imgtoansi.py mario.png -B -r 100 50
-```
-
-<img src="https://github.com/dax99993/imgtoANSI/blob/main/demo/mario_ascii.jpg" width='350' height='350'>
-
-
-<img src="https://github.com/dax99993/imgtoANSI/blob/main/demo/ghost.jpg" width='350' height='350'>
+<img src = "https://github.com/dax99993/img2ansi/blob/main/tests/test_pic5.png" width='350' height='350'>
 
 ```
-python imgtoansi.py ghost.jpg -fb -r 100 50
+ img2block tests/test_pic5.png -r 100 50
 ```
 
-<img src="https://github.com/dax99993/imgtoANSI/blob/main/demo/ghost_ascii.jpg" width='350' height='350'>
+<img src="https://github.com/dax99993/img2ansi/blob/main/demo/demo_block.png" width='350' height='350'>
+
+
+<img src="https://github.com/dax99993/img2ansi/blob/main/tests/test_pic3.jpg" width='350' height='350'>
 
 ```
-python imgtoansi.py ghost.jpg -d -r 100 50 -c 255 0 0
+ img2braile tests/test_pic3.jpg -F 0xf9 0x8b 0x88 -b
 ```
 
-<img src="https://github.com/dax99993/imgtoANSI/blob/main/demo/ghost_braile.jpg" width='350' height='350'>
-
-
+<img src="https://github.com/dax99993/img2ansi/blob/main/demo/demo_braile.png" width='350' height='350'>
 

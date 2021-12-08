@@ -5,10 +5,10 @@ img2ansi is a simple package containing three CLI to convert an image to an ASCI
 </div>
 
 <div align="center">
-  <a href="https://github.com/dax99993/imgtoANSI/blob/main/demo/demo.md">Demo</a>
+  <a href="https://github.com/dax99993/img2ansi/blob/main/demo/demo.md">Demo</a>
   <br/><br/>
   <a href="https://github.com/dax99993/img2ansi/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="MIT" />
+    <img alt="NPM" src="https://img.shields.io/npm/l/GPL2">
   </a>
   <a href="https://pypi.org/project/PIL/">
     <img src="https://img.shields.io/badge/Dependencies-PIL-blue.svg?style=flat-square" alt="dependencies" />
@@ -28,7 +28,7 @@ $ pip install img2ansi
 - Custom ASCII character set
 - Invert character set
 - No echo **/** echo to terminal
-- Resize of image convertion
+- Resize of image
 - Save to a file
 - True color
 
@@ -41,7 +41,6 @@ $ pip install img2ansi
 ## Todo
 - [x] Simple Ascii convertion
 - [x] Color support
-- [ ] Save as HTML
 - [ ] Multiple file handling
 - [ ] Simple animation
 
@@ -147,5 +146,5 @@ By default uses 2 blocks per terminal cell and -r 0 0
 
 ```
 
-## License 
-[MIT](https://github.com/dax99993/img2ansi/blob/main/LICENSE)
+## License
+[GPL2](https://github.com/dax99993/img2ansi/blob/main/LICENSE)
